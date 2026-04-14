@@ -71,3 +71,32 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
+
+
+The structure of the project will follow this approach:
+
+src/
+│
+├── core/                   # Configurações globais, instâncias do Axios, rotas
+│
+├── domain/                 # Entidades e Interfaces (Tipagens)
+│   └── models/
+│       └── User.ts         # Regras puras da entidade, tipos TS
+│
+├── infrastructure/         # Comunicação com o mundo externo (APIs, LocalStorage)
+│   └── http/
+│       └── UserApi.ts      # Implementação real da chamada à API
+│
+├── application/            # Casos de Uso (Regras de Negócio) e Estado
+│   ├── useCases/
+│   │   └── GetUsersUseCase.ts # Orquestra a busca de usuários
+│   │
+│   └── stores/
+│       └── userStore.ts    # Store do Pinia (Gerenciamento de Estado)
+│
+└── presentation/           # Camada de UI (Tudo que é Vue)
+    ├── views/
+    │   └── UserView.vue    # Componente Pai (Página/Smart Component)
+    │
+    └── components/
+        └── UserList.vue    # Componente Filho (Dumb Component / Apresentação pura)
