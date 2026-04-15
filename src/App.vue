@@ -1,29 +1,44 @@
+<template>
+  <div class="main-container">
+    <TitlePage name="Samantha" />
+    <div class="places-and-weather-container">
+      <div class="places-container">
+        <ButtonPlace v-for="place in placesAvailables" :key="place.name" :name="place.name"
+          :color="isActivePlace(place.name) ? '#C3E0FB' : 'transparent'" :is-active="isActivePlace(place.name)"
+          @click="selectPlace(place.name)" />
+      </div>
+      <div class="weather-container">
+        <p v-if="isLoading" class="feedback">Loading weather for {{ selectedPlace }}...</p>
+        <p v-else-if="errorMessage" class="feedback feedback--error">{{ errorMessage }}</p>
+        <CardWeather v-else-if="weather" :card-weather="cardWeather" />
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import TitlePage from '@/presentation/components/TitlePage.vue'
 import ButtonPlace from '@/presentation/components/ButtonPlace.vue'
+import CardWeather from '@/presentation/components/CardWeather.vue'
 import { storeToRefs } from 'pinia'
 import { useWeatherStore } from '@/application/stores/weatherStore'
+import { onMounted } from 'vue'
 
-const places = [
+const placesAvailables = [
   {
     name: 'Denver',
-    color: '#C3E0FB'
   },
   {
     name: 'Rio de Janeiro',
-    color: '#C3E0FB'
   },
   {
     name: 'Madrid',
-    color: '#C3E0FB'
 
   }, {
     name: 'Japan',
-    color: '#C3E0FB'
   },
   {
     name: ' Australia',
-    color: '#C3E0FB'
   },
 ]
 
@@ -32,29 +47,15 @@ const selectPlace = (place: string) => {
 }
 
 const weatherStore = useWeatherStore()
-const { weather, isLoading, errorMessage, selectedPlace } = storeToRefs(weatherStore)
+const { weather, cardWeather, isLoading, errorMessage, selectedPlace } = storeToRefs(weatherStore)
+const isActivePlace = (place: string) => {
+  return selectedPlace.value === place
+}
 
+onMounted(() => {
+  selectPlace('Denver')
+})
 </script>
-
-<template>
-  <div class="main-container">
-    <TitlePage name="Samantha" />
-    <div class="places-and-weather-container">
-      <div class="places-container">
-        <ButtonPlace v-for="place in places" :key="place.name" :name="place.name" :color="place.color"
-          @click="selectPlace(place.name)" />
-      </div>
-      <div class="weather-container">
-        <p v-if="isLoading" class="feedback">Loading weather for {{ selectedPlace }}...</p>
-        <p v-else-if="errorMessage" class="feedback feedback--error">{{ errorMessage }}</p>
-        <div v-else-if="weather" class="weather-summary">
-          <h2>{{ weather.location.name }}, {{ weather.location.country }}</h2>
-          <p>{{ weather.current.condition.text }} - {{ weather.current.temp_c }}C</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .main-container {
@@ -112,12 +113,5 @@ const { weather, isLoading, errorMessage, selectedPlace } = storeToRefs(weatherS
 
 .feedback--error {
   color: #d7263d;
-}
-
-.weather-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  color: var(--color-primary);
 }
 </style>
