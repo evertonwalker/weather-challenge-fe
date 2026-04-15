@@ -21,11 +21,11 @@ defineProps<{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.5rem;
 
     & h1 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         color: var(--color-primary);
         font-weight: var(--font-weight-semibold);
         line-height: 1.2;
