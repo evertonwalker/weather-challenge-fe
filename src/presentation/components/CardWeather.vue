@@ -1,19 +1,23 @@
 <template>
-  <article class="card-weather" :style="{ backgroundColor: cardWeather.backgroundColor }">
+  <article class="card-weather"
+    :style="{ backgroundColor: dayWeather.backgroundColor, padding: smallCard ? '1rem' : '3rem' }">
 
     <div class="card-weather__left">
-      <div class="card-weather__icon-wrapper" :style="{ backgroundColor: cardWeather.backgroundIcon }">
-        <img class="card-weather__icon" :src="cardWeather.conditionIconUrl" :alt="cardWeather.conditionText" />
+      <div class="card-weather__icon-wrapper"
+        :style="{ backgroundColor: dayWeather.backgroundColor, height: smallCard ? '40px' : '80px' }">
+        <img class="card-weather__icon" :src="dayWeather.iconUrl" :alt="dayWeather.conditionText" />
       </div>
       <div class="card-weather__content">
-        <h2 class="card-weather__title">{{ cardWeather.placeName }}</h2>
-        <p class="card-weather__condition">{{ cardWeather.conditionText }}</p>
+        <h2 class="card-weather__title" :style="{ fontSize: smallCard ? '1.3rem' : '2rem' }">{{ dayWeather.name }}
+        </h2>
+        <p class="card-weather__condition">{{ dayWeather.conditionText }}</p>
       </div>
     </div>
 
     <div class="card-weather__temperature-container">
-      <p class="card-weather__temperature">{{ Math.round(cardWeather.temperatureC) }}</p><span
-        class="card-weather__temperature-unit">°C</span>
+      <p class="card-weather__temperature" :style="{ fontSize: smallCard ? '1.5rem' : '3rem' }">{{
+        Math.round(dayWeather.temperatureC) }}</p><span class="card-weather__temperature-unit"
+        :style="{ fontSize: smallCard ? '1rem' : '1.5rem' }">°C</span>
     </div>
   </article>
 </template>
@@ -22,10 +26,11 @@
 
 
 
-import { type CardWeather } from '@/domain/models/CardWeather';
+import type { Day } from '@/domain/models/Day';
 
 defineProps<{
-  cardWeather: CardWeather
+  dayWeather: Day
+  smallCard?: boolean
 }>()
 
 </script>
@@ -42,8 +47,8 @@ defineProps<{
   gap: 1rem;
 
   @media (min-width: 1024px) {
-    width: 250px;
-    height: 425px;
+    width: 220px;
+    height: auto;
     flex-direction: column;
     align-items: center;
     padding: 3rem;
