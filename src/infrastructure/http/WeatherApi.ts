@@ -1,7 +1,8 @@
 import { WEATHER_API_BASE_URL, WEATHER_API_KEY } from '@/core/config/weatherApi'
 import type { WeatherResponse } from '@/domain/models/Weather'
+import type { WeatherForecastRepository } from '@/domain/ports/WeatherForecastRepository'
 
-export class WeatherApi {
+export class WeatherApi implements WeatherForecastRepository {
   async getForecastByPlace(place: string): Promise<WeatherResponse> {
     const url = new URL(`${WEATHER_API_BASE_URL}/forecast.json`)
     url.searchParams.set('key', WEATHER_API_KEY)

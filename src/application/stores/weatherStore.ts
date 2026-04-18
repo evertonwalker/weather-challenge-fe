@@ -1,9 +1,7 @@
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import type { WeatherResponse } from '@/domain/models/Weather'
-import { WeatherApi } from '@/infrastructure/http/WeatherApi'
-import { GetWeatherByPlaceUseCase } from '@/application/useCases/GetWeatherByPlaceUseCase'
 import type { SmallCardWeather } from '@/domain/models/SmallCardWeather'
 import type { Day } from '@/domain/models/Day'
 import {
@@ -12,11 +10,16 @@ import {
   mapWeatherResponseToNextDays,
   mapWeatherResponseToSmallCards,
 } from '@/application/mappers/weatherViewMapper'
-
-const weatherApi = new WeatherApi()
-const getWeatherByPlaceUseCase = new GetWeatherByPlaceUseCase(weatherApi)
+import { getWeatherByPlaceUseCaseKey } from '@/core/di/injectionKeys'
 
 export const useWeatherStore = defineStore('weather', () => {
+  const getWeatherByPlaceUseCase = inject(getWeatherByPlaceUseCaseKey)
+  if (!getWeatherByPlaceUseCase) {
+    throw new Error(
+      'GetWeatherByPlaceUseCase is not provided. Wire it in main.ts with app.provide(...).',
+    )
+  }
+
   /** Raw API payload — kept inside the store; not exposed to the UI. */
   const weatherResponse = ref<WeatherResponse | null>(null)
   const isLoading = ref(false)

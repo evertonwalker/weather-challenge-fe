@@ -38,8 +38,15 @@ import CardWeather from '@/presentation/components/CardWeather.vue'
 import SmallCardWeather from '@/presentation/components/SmallCardWeather.vue'
 import { storeToRefs } from 'pinia'
 import { useWeatherStore } from '@/application/stores/weatherStore'
-import { addSavedPlace, loadSavedPlaces } from '@/utils/savedPlacesStorage'
-import { onMounted, ref } from 'vue'
+import type { SavedPlacesRepository } from '@/domain/ports/SavedPlacesRepository'
+import { savedPlacesRepositoryKey } from '@/core/di/injectionKeys'
+import { inject, onMounted, ref } from 'vue'
+
+const savedPlacesInjected = inject(savedPlacesRepositoryKey)
+if (!savedPlacesInjected) {
+  throw new Error('SavedPlacesRepository is not provided. Wire it in main.ts with app.provide(...).')
+}
+const savedPlacesRepository: SavedPlacesRepository = savedPlacesInjected
 
 const weatherStore = useWeatherStore()
 const {
@@ -64,7 +71,7 @@ const DEFAULT_PLACES = [
 function mergeDefaultAndSavedPlaces(): { name: string }[] {
   const merged: { name: string }[] = DEFAULT_PLACES.map((p) => ({ ...p }))
   const seen = new Set(merged.map((p) => p.name.toLowerCase()))
-  for (const name of loadSavedPlaces()) {
+  for (const name of savedPlacesRepository.loadAll()) {
     const key = name.toLowerCase()
     if (!seen.has(key)) {
       seen.add(key)
@@ -99,7 +106,7 @@ async function handleSearchPlace(query: string) {
   if (hasWeatherData.value && !errorMessage.value) {
     const name = resolvedLocationName.value
     if (name) {
-      addSavedPlace(name)
+      savedPlacesRepository.addIfNew(name)
       ensurePlaceInList(name)
       inputPlaceRef.value?.clear()
     }

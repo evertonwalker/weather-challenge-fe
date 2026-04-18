@@ -1,10 +1,10 @@
 import type { WeatherResponse } from '@/domain/models/Weather'
-import { WeatherApi } from '@/infrastructure/http/WeatherApi'
+import type { WeatherForecastRepository } from '@/domain/ports/WeatherForecastRepository'
 
 export class GetWeatherByPlaceUseCase {
-  constructor(private readonly weatherApi: WeatherApi) {}
+  constructor(private readonly weatherForecastRepository: WeatherForecastRepository) {}
 
   async execute(place: string): Promise<WeatherResponse> {
-    return this.weatherApi.getForecastByPlace(place)
+    return this.weatherForecastRepository.getForecastByPlace(place)
   }
 }
