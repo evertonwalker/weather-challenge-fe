@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 
-import ButtonPlace from '@/presentation/components/ButtonPlace.vue'
+import ButtonPlace from './ButtonPlace.vue'
 
 describe('ButtonPlace', () => {
   it('renders name and applies background color', () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 
-import SmallCardWeather from '@/presentation/components/SmallCardWeather.vue'
+import SmallCardWeather from './SmallCardWeather.vue'
 
 describe('SmallCardWeather', () => {
   it('renders time, icon, background and rounded temperature', () => {

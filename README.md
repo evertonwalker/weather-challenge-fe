@@ -104,7 +104,7 @@ src/
 │   └── stores/           # Pinia stores (weatherStore; injects use cases via DI)
 │
 ├── presentation/
-│   └── components/       # Vue UI (dumb/presentational components + page shell in App.vue)
+│   └── components/       # One folder per component: ComponentName/ComponentName.vue (+ .spec.ts when tested)
 │
 ├── composables/          # Shared Vue composables (e.g. useIsMobile)
 ├── router/               # Vue Router setup (routes can grow here)

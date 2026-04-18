@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 
-import InputPlace from '@/presentation/components/InputPlace.vue'
+import InputPlace from './InputPlace.vue'
 
 describe('InputPlace', () => {
   it('emits search with trimmed value when Search is clicked', async () => {

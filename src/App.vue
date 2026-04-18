@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import TitlePage from '@/presentation/components/TitlePage.vue'
-import ButtonPlace from '@/presentation/components/ButtonPlace.vue'
-import InputPlace from '@/presentation/components/InputPlace.vue'
-import CardWeather from '@/presentation/components/CardWeather.vue'
-import SmallCardWeather from '@/presentation/components/SmallCardWeather.vue'
+import TitlePage from '@/presentation/components/TitlePage/TitlePage.vue'
+import ButtonPlace from '@/presentation/components/ButtonPlace/ButtonPlace.vue'
+import InputPlace from '@/presentation/components/InputPlace/InputPlace.vue'
+import CardWeather from '@/presentation/components/CardWeather/CardWeather.vue'
+import SmallCardWeather from '@/presentation/components/SmallCardWeather/SmallCardWeather.vue'
 import { storeToRefs } from 'pinia'
 import { useWeatherStore } from '@/application/stores/weatherStore'
 import type { SavedPlacesRepository } from '@/domain/ports/SavedPlacesRepository'
@@ -129,12 +129,6 @@ onMounted(() => {
   gap: 3rem;
 
 
-  @media (min-width: 768px) {
-    width: 80%;
-    padding: 2rem;
-    margin: 0 auto;
-  }
-
   @media (min-width: 1024px) {
     width: 80%;
     padding: 4rem;
@@ -146,13 +140,6 @@ onMounted(() => {
   flex-direction: column;
   gap: 2rem;
   width: 100%;
-
-
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-    gap: 2rem;
-  }
 
   @media (min-width: 1024px) {
     height: 400px;
@@ -202,17 +189,6 @@ onMounted(() => {
     box-sizing: border-box;
     min-width: 0;
     min-height: 0;
-  }
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-    gap: 2rem;
-
-    >.small-card-weather-list,
-    >.next-days-weather-list {
-      flex: 1 1 50%;
-      max-width: 50%;
-    }
   }
 
   @media (min-width: 1024px) {

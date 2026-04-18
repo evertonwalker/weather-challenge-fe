@@ -27,10 +27,6 @@ import sunnyIcon from '@/assets/icons/sunny.svg'
         font-weight: var(--font-weight-semibold);
         line-height: 1.2;
 
-        @media (min-width: 768px) {
-            font-size: 2rem;
-        }
-
         @media (min-width: 1024px) {
             font-size: 3rem;
         }

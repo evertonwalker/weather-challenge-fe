@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 
 import type { Day } from '@/domain/models/Day'
-import CardWeather from '@/presentation/components/CardWeather.vue'
+import CardWeather from './CardWeather.vue'
 
 const dayWeather: Day = {
   name: 'Denver',
