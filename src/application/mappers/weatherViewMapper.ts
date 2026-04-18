@@ -3,6 +3,15 @@ import { defaultDay } from '@/domain/models/Day'
 import type { SmallCardWeather } from '@/domain/models/SmallCardWeather'
 import type { WeatherResponse } from '@/domain/models/Weather'
 
+/** Canonical place name from the API response (for persistence and labels). */
+export function getResolvedLocationName(weather: WeatherResponse | null): string | null {
+  if (!weather) {
+    return null
+  }
+  const name = weather.location.name?.trim()
+  return name || null
+}
+
 /**
  * Maps WeatherAPI condition codes to UI background colors.
  * @see https://www.weatherapi.com/docs/weather_conditions.json

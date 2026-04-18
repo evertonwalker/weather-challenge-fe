@@ -10,7 +10,7 @@
       <div class="weather-container">
         <p v-if="isLoading" class="feedback">Loading weather for {{ selectedPlace }}...</p>
         <p v-else-if="errorMessage" class="feedback feedback--error">{{ errorMessage }}</p>
-        <template v-else-if="weather">
+        <template v-else-if="hasWeatherData">
           <div class="weather-container-loaded-data-container">
             <CardWeather :day-weather="currentDayWeather" />
             <div class="small-card-weather-list-and-next-days-weather-list-container">
@@ -42,8 +42,16 @@ import { addSavedPlace, loadSavedPlaces } from '@/utils/savedPlacesStorage'
 import { onMounted, ref } from 'vue'
 
 const weatherStore = useWeatherStore()
-const { weather, currentDayWeather, nextDaysWeather, isLoading, errorMessage, selectedPlace, smallCardWeatherList } =
-  storeToRefs(weatherStore)
+const {
+  hasWeatherData,
+  resolvedLocationName,
+  currentDayWeather,
+  nextDaysWeather,
+  isLoading,
+  errorMessage,
+  selectedPlace,
+  smallCardWeatherList,
+} = storeToRefs(weatherStore)
 
 const DEFAULT_PLACES = [
   { name: 'Denver' },
@@ -88,11 +96,13 @@ function ensurePlaceInList(name: string) {
 async function handleSearchPlace(query: string) {
   if (!query) return
   await weatherStore.fetchWeatherByPlace(query)
-  if (weather.value && !errorMessage.value) {
-    const resolvedName = weather.value.location.name
-    addSavedPlace(resolvedName)
-    ensurePlaceInList(resolvedName)
-    inputPlaceRef.value?.clear()
+  if (hasWeatherData.value && !errorMessage.value) {
+    const name = resolvedLocationName.value
+    if (name) {
+      addSavedPlace(name)
+      ensurePlaceInList(name)
+      inputPlaceRef.value?.clear()
+    }
   }
 }
 

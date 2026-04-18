@@ -7,6 +7,7 @@ import { GetWeatherByPlaceUseCase } from '@/application/useCases/GetWeatherByPla
 import type { SmallCardWeather } from '@/domain/models/SmallCardWeather'
 import type { Day } from '@/domain/models/Day'
 import {
+  getResolvedLocationName,
   mapWeatherResponseToCurrentDay,
   mapWeatherResponseToNextDays,
   mapWeatherResponseToSmallCards,
@@ -16,20 +17,25 @@ const weatherApi = new WeatherApi()
 const getWeatherByPlaceUseCase = new GetWeatherByPlaceUseCase(weatherApi)
 
 export const useWeatherStore = defineStore('weather', () => {
-  const weather = ref<WeatherResponse | null>(null)
+  /** Raw API payload — kept inside the store; not exposed to the UI. */
+  const weatherResponse = ref<WeatherResponse | null>(null)
   const isLoading = ref(false)
   const errorMessage = ref<string | null>(null)
   const selectedPlace = ref<string | null>(null)
 
+  const hasWeatherData = computed(() => weatherResponse.value !== null)
+
+  const resolvedLocationName = computed(() => getResolvedLocationName(weatherResponse.value))
+
   const currentDayWeather = computed<Day>(() =>
-    mapWeatherResponseToCurrentDay(weather.value, selectedPlace.value),
+    mapWeatherResponseToCurrentDay(weatherResponse.value, selectedPlace.value),
   )
 
   const smallCardWeatherList = computed<SmallCardWeather[]>(() =>
-    mapWeatherResponseToSmallCards(weather.value),
+    mapWeatherResponseToSmallCards(weatherResponse.value),
   )
 
-  const nextDaysWeather = computed<Day[]>(() => mapWeatherResponseToNextDays(weather.value))
+  const nextDaysWeather = computed<Day[]>(() => mapWeatherResponseToNextDays(weatherResponse.value))
 
   const fetchWeatherByPlace = async (place: string) => {
     isLoading.value = true
@@ -37,9 +43,9 @@ export const useWeatherStore = defineStore('weather', () => {
     selectedPlace.value = place
 
     try {
-      weather.value = await getWeatherByPlaceUseCase.execute(place)
+      weatherResponse.value = await getWeatherByPlaceUseCase.execute(place)
     } catch (error) {
-      weather.value = null
+      weatherResponse.value = null
       errorMessage.value =
         error instanceof Error ? error.message : 'Unexpected error while fetching weather'
     } finally {
@@ -48,7 +54,8 @@ export const useWeatherStore = defineStore('weather', () => {
   }
 
   return {
-    weather,
+    hasWeatherData,
+    resolvedLocationName,
     currentDayWeather,
     nextDaysWeather,
     smallCardWeatherList,
