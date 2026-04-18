@@ -1,7 +1,7 @@
 <template>
     <div class="title-container">
         <h1>
-            Good afternoon, {{ name }}
+            Hello there!
         </h1>
         <img class="title__icon" :src="sunnyIcon" alt="" width="48" height="48" />
     </div>
@@ -10,9 +10,6 @@
 <script setup lang="ts">
 import sunnyIcon from '@/assets/icons/sunny.svg'
 
-defineProps<{
-    name: string
-}>()
 </script>
 
 <style scoped>

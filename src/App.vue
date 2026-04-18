@@ -1,11 +1,11 @@
 <template>
   <div class="main-container">
-    <TitlePage name="Samantha" />
+    <TitlePage />
     <div class="places-and-weather-container">
+      <InputPlace ref="inputPlaceRef" @search="handleSearchPlace" />
       <div class="places-container">
         <ButtonPlace v-for="place in placesAvailables" :key="place.name" :name="place.name"
-          :color="isActivePlace(place.name) ? '#C3E0FB' : 'transparent'" :is-active="isActivePlace(place.name)"
-          @click="selectPlace(place.name)" />
+          :color="isActivePlace(place.name) ? '#C3E0FB' : 'transparent'" @click="selectPlace(place.name)" />
       </div>
       <div class="weather-container">
         <p v-if="isLoading" class="feedback">Loading weather for {{ selectedPlace }}...</p>
@@ -33,39 +33,69 @@
 <script setup lang="ts">
 import TitlePage from '@/presentation/components/TitlePage.vue'
 import ButtonPlace from '@/presentation/components/ButtonPlace.vue'
+import InputPlace from '@/presentation/components/InputPlace.vue'
 import CardWeather from '@/presentation/components/CardWeather.vue'
 import SmallCardWeather from '@/presentation/components/SmallCardWeather.vue'
 import { storeToRefs } from 'pinia'
 import { useWeatherStore } from '@/application/stores/weatherStore'
-import { onMounted } from 'vue'
+import { addSavedPlace, loadSavedPlaces } from '@/utils/savedPlacesStorage'
+import { onMounted, ref } from 'vue'
 
-const placesAvailables = [
-  {
-    name: 'Denver',
-  },
-  {
-    name: 'Rio de Janeiro',
-  },
-  {
-    name: 'Madrid',
+const weatherStore = useWeatherStore()
+const { weather, currentDayWeather, nextDaysWeather, isLoading, errorMessage, selectedPlace, smallCardWeatherList } =
+  storeToRefs(weatherStore)
 
-  }, {
-    name: 'Japan',
-  },
-  {
-    name: ' Australia',
-  },
+const DEFAULT_PLACES = [
+  { name: 'Denver' },
+  { name: 'Rio de Janeiro' },
+  { name: 'Madrid' },
+  { name: 'Japan' },
+  { name: 'Australia' },
 ]
+
+function mergeDefaultAndSavedPlaces(): { name: string }[] {
+  const merged: { name: string }[] = DEFAULT_PLACES.map((p) => ({ ...p }))
+  const seen = new Set(merged.map((p) => p.name.toLowerCase()))
+  for (const name of loadSavedPlaces()) {
+    const key = name.toLowerCase()
+    if (!seen.has(key)) {
+      seen.add(key)
+      merged.push({ name })
+    }
+  }
+  return merged
+}
+
+const placesAvailables = ref(mergeDefaultAndSavedPlaces())
+
+const inputPlaceRef = ref<{ clear: () => void } | null>(null)
 
 const selectPlace = (place: string) => {
   weatherStore.fetchWeatherByPlace(place)
 }
 
-const weatherStore = useWeatherStore()
-const { weather, currentDayWeather, nextDaysWeather, isLoading, errorMessage, selectedPlace, smallCardWeatherList } = storeToRefs(weatherStore)
-const isActivePlace = (place: string) => {
-  return selectedPlace.value === place
+const isActivePlace = (place: string) => selectedPlace.value === place
+
+function ensurePlaceInList(name: string) {
+  const trimmed = name.trim()
+  if (!trimmed) return
+  if (placesAvailables.value.some((p) => p.name.toLowerCase() === trimmed.toLowerCase())) {
+    return
+  }
+  placesAvailables.value = [...placesAvailables.value, { name: trimmed }]
 }
+
+async function handleSearchPlace(query: string) {
+  if (!query) return
+  await weatherStore.fetchWeatherByPlace(query)
+  if (weather.value && !errorMessage.value) {
+    const resolvedName = weather.value.location.name
+    addSavedPlace(resolvedName)
+    ensurePlaceInList(resolvedName)
+    inputPlaceRef.value?.clear()
+  }
+}
+
 onMounted(() => {
   selectPlace('Denver')
 })

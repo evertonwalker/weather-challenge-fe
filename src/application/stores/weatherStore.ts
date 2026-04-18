@@ -4,8 +4,6 @@ import { defineStore } from 'pinia'
 import type { WeatherResponse } from '@/domain/models/Weather'
 import { WeatherApi } from '@/infrastructure/http/WeatherApi'
 import { GetWeatherByPlaceUseCase } from '@/application/useCases/GetWeatherByPlaceUseCase'
-import type { CardWeather } from '@/domain/models/CardWeather'
-import { defaultCardWeather } from '@/domain/models/CardWeather'
 import type { SmallCardWeather } from '@/domain/models/SmallCardWeather'
 import { defaultDay, type Day } from '@/domain/models/Day'
 
