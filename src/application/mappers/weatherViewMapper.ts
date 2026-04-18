@@ -1,10 +1,10 @@
 import type { Day } from '@/domain/models/Day'
 import { defaultDay } from '@/domain/models/Day'
 import type { SmallCardWeather } from '@/domain/models/SmallCardWeather'
-import type { WeatherResponse } from '@/domain/models/Weather'
+import type { WeatherForecastResponseDto } from '@/domain/contracts/weatherForecastResponse.dto'
 
 /** Canonical place name from the API response (for persistence and labels). */
-export function getResolvedLocationName(weather: WeatherResponse | null): string | null {
+export function getResolvedLocationName(weather: WeatherForecastResponseDto | null): string | null {
   if (!weather) {
     return null
   }
@@ -59,7 +59,7 @@ function getForecastDayLabel(date: string, index: number): string {
 }
 
 export function mapWeatherResponseToCurrentDay(
-  weather: WeatherResponse | null,
+  weather: WeatherForecastResponseDto | null,
   selectedPlace: string | null,
 ): Day {
   if (!weather) {
@@ -82,7 +82,7 @@ export function mapWeatherResponseToCurrentDay(
  * Pass a fixed value in unit tests.
  */
 export function mapWeatherResponseToSmallCards(
-  weather: WeatherResponse | null,
+  weather: WeatherForecastResponseDto | null,
   currentLocalHour: number = new Date().getHours(),
 ): SmallCardWeather[] {
   if (!weather) {
@@ -119,7 +119,7 @@ export function mapWeatherResponseToSmallCards(
   })
 }
 
-export function mapWeatherResponseToNextDays(weather: WeatherResponse | null): Day[] {
+export function mapWeatherResponseToNextDays(weather: WeatherForecastResponseDto | null): Day[] {
   if (!weather) {
     return []
   }

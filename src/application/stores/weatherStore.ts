@@ -1,7 +1,7 @@
 import { computed, inject, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import type { WeatherResponse } from '@/domain/models/Weather'
+import type { WeatherForecastResponseDto } from '@/domain/contracts/weatherForecastResponse.dto'
 import type { SmallCardWeather } from '@/domain/models/SmallCardWeather'
 import type { Day } from '@/domain/models/Day'
 import {
@@ -21,7 +21,7 @@ export const useWeatherStore = defineStore('weather', () => {
   }
 
   /** Raw API payload — kept inside the store; not exposed to the UI. */
-  const weatherResponse = ref<WeatherResponse | null>(null)
+  const weatherResponse = ref<WeatherForecastResponseDto | null>(null)
   const isLoading = ref(false)
   const errorMessage = ref<string | null>(null)
   const selectedPlace = ref<string | null>(null)

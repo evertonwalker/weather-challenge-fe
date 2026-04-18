@@ -1,10 +1,17 @@
-export interface WeatherCondition {
+/**
+ * Forma do JSON retornado por WeatherAPI.com (`forecast.json`).
+ * Contrato de borda — não é entidade de domínio; view models ficam em `domain/models`.
+ *
+ * @see https://www.weatherapi.com/docs/
+ */
+
+export interface WeatherForecastConditionDto {
   text: string
   icon: string
   code: number
 }
 
-export interface WeatherLocation {
+export interface WeatherForecastLocationDto {
   name: string
   region: string
   country: string
@@ -15,13 +22,13 @@ export interface WeatherLocation {
   localtime: string
 }
 
-export interface WeatherCurrent {
+export interface WeatherForecastCurrentDto {
   last_updated_epoch: number
   last_updated: string
   temp_c: number
   temp_f: number
   is_day: number
-  condition: WeatherCondition
+  condition: WeatherForecastConditionDto
   wind_mph: number
   wind_kph: number
   wind_degree: number
@@ -47,7 +54,7 @@ export interface WeatherCurrent {
   gust_kph: number
 }
 
-export interface WeatherDay {
+export interface WeatherForecastDaySummaryDto {
   maxtemp_c: number
   maxtemp_f: number
   mintemp_c: number
@@ -66,11 +73,11 @@ export interface WeatherDay {
   daily_chance_of_rain: number
   daily_will_it_snow: number
   daily_chance_of_snow: number
-  condition: WeatherCondition
+  condition: WeatherForecastConditionDto
   uv: number
 }
 
-export interface WeatherAstro {
+export interface WeatherForecastAstroDto {
   sunrise: string
   sunset: string
   moonrise: string
@@ -81,13 +88,13 @@ export interface WeatherAstro {
   is_sun_up: number
 }
 
-export interface WeatherHour {
+export interface WeatherForecastHourDto {
   time_epoch: number
   time: string
   temp_c: number
   temp_f: number
   is_day: number
-  condition: WeatherCondition
+  condition: WeatherForecastConditionDto
   wind_mph: number
   wind_kph: number
   wind_degree: number
@@ -118,20 +125,21 @@ export interface WeatherHour {
   uv: number
 }
 
-export interface WeatherForecastDay {
+export interface WeatherForecastDayBlockDto {
   date: string
   date_epoch: number
-  day: WeatherDay
-  astro: WeatherAstro
-  hour: WeatherHour[]
+  day: WeatherForecastDaySummaryDto
+  astro: WeatherForecastAstroDto
+  hour: WeatherForecastHourDto[]
 }
 
-export interface WeatherForecast {
-  forecastday: WeatherForecastDay[]
+export interface WeatherForecastSectionDto {
+  forecastday: WeatherForecastDayBlockDto[]
 }
 
-export interface WeatherResponse {
-  location: WeatherLocation
-  current: WeatherCurrent
-  forecast: WeatherForecast
+/** Raiz do payload `forecast.json` da WeatherAPI. */
+export interface WeatherForecastResponseDto {
+  location: WeatherForecastLocationDto
+  current: WeatherForecastCurrentDto
+  forecast: WeatherForecastSectionDto
 }

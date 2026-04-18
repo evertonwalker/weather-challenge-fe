@@ -1,9 +1,9 @@
 import { WEATHER_API_BASE_URL, WEATHER_API_KEY } from '@/core/config/weatherApi'
-import type { WeatherResponse } from '@/domain/models/Weather'
+import type { WeatherForecastResponseDto } from '@/domain/contracts/weatherForecastResponse.dto'
 import type { WeatherForecastRepository } from '@/domain/ports/WeatherForecastRepository'
 
 export class WeatherApi implements WeatherForecastRepository {
-  async getForecastByPlace(place: string): Promise<WeatherResponse> {
+  async getForecastByPlace(place: string): Promise<WeatherForecastResponseDto> {
     const url = new URL(`${WEATHER_API_BASE_URL}/forecast.json`)
     url.searchParams.set('key', WEATHER_API_KEY)
     url.searchParams.set('q', place)
@@ -16,6 +16,6 @@ export class WeatherApi implements WeatherForecastRepository {
       throw new Error(`Weather API error: ${response.status}`)
     }
 
-    return (await response.json()) as WeatherResponse
+    return (await response.json()) as WeatherForecastResponseDto
   }
 }
