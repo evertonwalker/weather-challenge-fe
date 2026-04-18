@@ -80,12 +80,12 @@ onMounted(() => {
   height: 100vh;
   padding: 1rem;
   gap: 3rem;
-  margin: 0 auto;
 
 
   @media (min-width: 768px) {
     width: 80%;
     padding: 2rem;
+    margin: 0 auto;
   }
 
   @media (min-width: 1024px) {
@@ -187,7 +187,7 @@ onMounted(() => {
 .next-days-weather-list {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   width: 100%;
 
   @media (min-width: 768px) {
