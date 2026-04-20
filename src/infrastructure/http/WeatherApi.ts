@@ -8,7 +8,7 @@ export class WeatherApi implements WeatherForecastRepository {
     url.searchParams.set('key', WEATHER_API_KEY)
     url.searchParams.set('q', place)
     url.searchParams.set('days', '3')
-    url.searchParams.set('lang', 'pt')
+    url.searchParams.set('lang', 'en')
 
     const response = await fetch(url.toString())
 
