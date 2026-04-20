@@ -127,6 +127,7 @@ onMounted(() => {
   height: 100vh;
   padding: 1rem;
   gap: 3rem;
+  margin: 0 auto;
 
 
   @media (min-width: 1024px) {
